@@ -3,13 +3,19 @@
   hosts: all
   become: true
   tasks:
-    # Task 1: Ensure Docker is installed
-    - name: Install Docker
-      package:
-        name: docker
-        state: present
+    # Task 1: Ensure Docker is installed (manual instruction on macOS)
+    - name: Check if Docker is installed
+      shell: |
+        if ! command -v docker &>/dev/null; then
+          echo "Docker is not installed. Please install Docker manually on macOS."
+          exit 1
+        fi
+      args:
+        executable: /bin/bash
+      register: docker_check
+      failed_when: docker_check.rc != 0
 
-    # Task 2: Install Minikube (optional, if you are using Minikube for Kubernetes)
+    # Task 2: Install Minikube
     - name: Install Minikube
       shell: |
         curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
