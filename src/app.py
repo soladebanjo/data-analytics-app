@@ -1,7 +1,9 @@
 from flask import Flask, render_template
+import os
 from src.analysis import run_analysis
 
-app = Flask(__name__)
+# Explicitly set the template folder path
+app = Flask(__name__, template_folder=os.path.join(os.getcwd(), 'templates'))
 
 @app.route('/')
 def index():
@@ -9,4 +11,6 @@ def index():
     return render_template('index.html', results=results)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5002)
+    app.run(host='0.0.0.0', port=5002, debug=True)
+
+print("Template folder:", app.template_folder)
