@@ -1,18 +1,12 @@
-import os
 from flask import Flask, render_template
-import analysis
+from src.analysis import run_analysis
 
-# Explicitly set the template folder
-app = Flask(__name__, template_folder= 'templates')
+app = Flask(__name__)
 
 @app.route('/')
 def index():
-    results = analysis.run_analysis()
-    if 'error' in results:
-        return f"<h1>Error: {results['error']}</h1>"
+    results = run_analysis()
     return render_template('index.html', results=results)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
-
-
+    app.run(host='0.0.0.0', port=5000)

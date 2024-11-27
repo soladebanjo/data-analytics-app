@@ -1,15 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Data Analytics App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analysis</title>
 </head>
 <body>
-    <h1>Data Analytics Results</h1>
-    {% if results.error %}
-        <p>Error: {{ results.error }}</p>
+    <h1>Data Analysis Results</h1>
+    {% if 'error' in results %}
+        <p>Error: {{ results['error'] }}</p>
     {% else %}
-        <p>Mean Value: {{ results.mean }}</p>
+        <ul>
+            <li>Mean: {{ results['mean'] }}</li>
+            <li>Median: {{ results['median'] }}</li>
+            <li>Standard Deviation: {{ results['std_dev'] }}</li>
+        </ul>
     {% endif %}
 </body>
 </html>
-

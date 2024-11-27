@@ -1,16 +1,14 @@
-from utils import load_data
+from src.utils import load_csv, calculate_statistics
 
 def run_analysis():
-    # Load the CSV file using utility function
-    data = load_data('data/sample.csv')
-    
+    # Load data using the utility function
+    data = load_csv('data/sample.csv')
     if data is None:
-        return {'error': 'File not found'}
-    
-    try:
-        # Perform analysis (e.g., calculate mean)
-        mean_value = data['value'].mean()
-        return {'mean': mean_value}
-    except KeyError:
-        # Handle missing column
-        return {'error': 'Column "value" not found in the dataset'}
+        return {"error": "Failed to load data"}
+
+    # Perform statistical analysis
+    stats = calculate_statistics(data, 'value')
+    if stats is None:
+        return {"error": "Failed to calculate statistics"}
+
+    return stats
