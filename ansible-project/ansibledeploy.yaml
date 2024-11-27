@@ -4,41 +4,27 @@
   become: true
   tasks:
     - name: Check if Docker is installed
-      shell: |
-        if ! command -v docker &>/dev/null; then
-          echo "Docker is not installed. Please install Docker manually on macOS."
-          exit 1
-        fi
-      args:
-        executable: /bin/bash
+      command: docker --version
+      ignore_errors: true
+
+    - name: Install Docker (if not already installed)
+      apt:
+        name: docker.io
+        state: present
+      when: ansible_distribution != "Darwin"
 
     - name: Install Minikube
-      become: false
-      shell: |
-        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-arm64
-        chmod +x minikube-darwin-arm64
-        mv minikube-darwin-arm64 /usr/local/bin/minikube
-      args:
-        executable: /bin/bash
+      command: brew install minikube
+      when: ansible_distribution == "Darwin"
 
     - name: Start Minikube
-      become: false
-      shell: |
-        minikube start --driver=docker
-      args:
-        executable: /bin/bash
+      command: minikube start --driver=docker
 
     - name: Load Docker image into Minikube
-      become: false
-      shell: |
-        minikube image load my-python-app:latest
-      args:
-        executable: /bin/bash
+      command: minikube image load my-python-app:latest
 
     - name: Deploy Kubernetes Deployment
-      become: false
-      command: kubectl apply -f k8sdeployment.yaml
+      command: kubectl apply -f /Users/oluwakanyinsolaadebanjo/Documents/data-analytics-app/k8sdeployment.yaml
 
     - name: Deploy Kubernetes Service
-      become: false
-      command: kubectl apply -f k8sservice.yaml
+      command: kubectl apply -f /Users/oluwakanyinsolaadebanjo/Documents/data-analytics-app/k8sservice.yaml
