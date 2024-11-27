@@ -5,16 +5,15 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'pip install -r requirements.txt'
+                    sh 'python3 -m pip install --upgrade pip'
+                    sh 'python3 -m pip install -r requirements.txt'
                 }
             }
         }
         stage('Test') {
             steps {
                 script {
-                    // Ensure pytest is installed
-                    sh 'pip install pytest'
-                    // Run tests
+                    sh 'python3 -m pip install pytest'
                     sh 'pytest'
                 }
             }
@@ -29,7 +28,6 @@ pipeline {
         stage('Deploy to Minikube') {
             steps {
                 script {
-                    // Apply Kubernetes deployment
                     sh 'kubectl apply -f k8s/deployment.yaml'
                 }
             }
