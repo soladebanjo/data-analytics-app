@@ -1,9 +1,8 @@
 ---
 - name: Setup and Deploy Application
-  hosts: all
+  hosts: localhost
   become: true
   tasks:
-    # Task 1: Ensure Docker is installed (manual instruction on macOS)
     - name: Check if Docker is installed
       shell: |
         if ! command -v docker &>/dev/null; then
@@ -12,45 +11,34 @@
         fi
       args:
         executable: /bin/bash
-      register: docker_check
-      failed_when: docker_check.rc != 0
 
-    # Task 2: Install Minikube
     - name: Install Minikube
+      become: false
       shell: |
-        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
-        install minikube-darwin-amd64 /usr/local/bin/minikube
+        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-arm64
+        chmod +x minikube-darwin-arm64
+        mv minikube-darwin-arm64 /usr/local/bin/minikube
       args:
         executable: /bin/bash
-      when: ansible_system == "Darwin"
 
-    # Task 3: Start Minikube
     - name: Start Minikube
+      become: false
       shell: |
-        minikube start
+        minikube start --driver=docker
       args:
         executable: /bin/bash
 
-    # Task 4: Ensure kubectl is available
-    - name: Install kubectl
-      shell: |
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl"
-        chmod +x kubectl
-        mv kubectl /usr/local/bin/kubectl
-      args:
-        executable: /bin/bash
-
-    # Task 5: Load Docker image into Minikube
     - name: Load Docker image into Minikube
+      become: false
       shell: |
         minikube image load my-python-app:latest
       args:
         executable: /bin/bash
 
-    # Task 6: Apply Kubernetes deployment
-    - name: Deploy application to Kubernetes
+    - name: Deploy Kubernetes Deployment
+      become: false
       command: kubectl apply -f k8sdeployment.yaml
 
-    # Task 7: Apply Kubernetes service
-    - name: Apply Kubernetes service
+    - name: Deploy Kubernetes Service
+      become: false
       command: kubectl apply -f k8sservice.yaml
