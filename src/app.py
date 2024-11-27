@@ -1,7 +1,8 @@
 from flask import Flask, render_template
 import analysis
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.join(os.getcwd(), 'templates'))
 
 @app.route('/')
 def index():
@@ -14,4 +15,4 @@ def index():
     return render_template('index.html', results=results)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
