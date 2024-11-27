@@ -2,19 +2,27 @@ pipeline {
     agent any
 
     stages {
+        stage('Setup Virtual Environment') {
+            steps {
+                script {
+                    // Activate the virtual environment
+                    sh '. venv/bin/activate && python3 -m pip install --upgrade pip'
+                }
+            }
+        }
         stage('Build') {
             steps {
                 script {
-                    sh 'python3 -m pip install --upgrade pip'
-                    sh 'python3 -m pip install -r requirements.txt'
+                    // Use the virtual environment to install dependencies
+                    sh '. venv/bin/activate && python3 -m pip install -r requirements.txt'
                 }
             }
         }
         stage('Test') {
             steps {
                 script {
-                    sh 'python3 -m pip install pytest'
-                    sh 'pytest'
+                    // Run tests within the virtual environment
+                    sh '. venv/bin/activate && python3 -m pytest'
                 }
             }
         }
@@ -34,4 +42,3 @@ pipeline {
         }
     }
 }
-
