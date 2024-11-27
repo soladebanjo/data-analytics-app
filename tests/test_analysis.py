@@ -1,8 +1,12 @@
-# tests/test_analysis.py
-
+import sys
+import os
 import unittest
-from src.utils import calculate_statistics
 import pandas as pd
+
+# Ensure the src directory is in the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+
+from utils import calculate_statistics  # Adjusted import based on the corrected path
 
 class TestAnalysis(unittest.TestCase):
     def test_calculate_statistics(self):
