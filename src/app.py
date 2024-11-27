@@ -1,8 +1,11 @@
 import sys
 import os
 from flask import Flask, render_template
-import os
-from src.analysis import run_analysis
+
+# Add the parent directory to the Python module search path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from src.analysis import run_analysis  # Import after adjusting the path
 
 # Explicitly set the template folder path
 app = Flask(__name__, template_folder=os.path.join(os.getcwd(), 'templates'))
