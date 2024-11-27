@@ -3,7 +3,7 @@ from flask import Flask, render_template
 import analysis
 
 # Explicitly set the template folder
-app = Flask(__name__, template_folder='/app/templates')
+app = Flask(__name__, template_folder= 'templates')
 
 @app.route('/')
 def index():
