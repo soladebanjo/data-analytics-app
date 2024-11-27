@@ -1,0 +1,11 @@
+---
+- hosts: all
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+      become: yes
+
+    - name: Deploy Application
+      command: kubectl apply -f /path/to/k8sdeployment.yaml
