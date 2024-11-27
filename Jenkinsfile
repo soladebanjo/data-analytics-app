@@ -5,7 +5,8 @@ pipeline {
         stage('Setup Virtual Environment') {
             steps {
                 script {
-                    // Activate the virtual environment
+                    // Create virtual environment and upgrade pip
+                    sh 'python3 -m venv venv'
                     sh '. venv/bin/activate && python3 -m pip install --upgrade pip'
                 }
             }
@@ -13,7 +14,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Use the virtual environment to install dependencies
+                    // Install dependencies in the virtual environment
                     sh '. venv/bin/activate && python3 -m pip install -r requirements.txt'
                 }
             }
