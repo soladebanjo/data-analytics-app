@@ -1,11 +1,50 @@
 ---
-- hosts: all
+- name: Setup and Deploy Application
+  hosts: all
+  become: true
   tasks:
+    # Task 1: Ensure Docker is installed
     - name: Install Docker
-      apt:
-        name: docker.io
+      package:
+        name: docker
         state: present
-      become: yes
 
-    - name: Deploy Application
-      command: kubectl apply -f /path/to/k8sdeployment.yaml
+    # Task 2: Install Minikube (optional, if you are using Minikube for Kubernetes)
+    - name: Install Minikube
+      shell: |
+        curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
+        install minikube-darwin-amd64 /usr/local/bin/minikube
+      args:
+        executable: /bin/bash
+      when: ansible_system == "Darwin"
+
+    # Task 3: Start Minikube
+    - name: Start Minikube
+      shell: |
+        minikube start
+      args:
+        executable: /bin/bash
+
+    # Task 4: Ensure kubectl is available
+    - name: Install kubectl
+      shell: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/amd64/kubectl"
+        chmod +x kubectl
+        mv kubectl /usr/local/bin/kubectl
+      args:
+        executable: /bin/bash
+
+    # Task 5: Load Docker image into Minikube
+    - name: Load Docker image into Minikube
+      shell: |
+        minikube image load my-python-app:latest
+      args:
+        executable: /bin/bash
+
+    # Task 6: Apply Kubernetes deployment
+    - name: Deploy application to Kubernetes
+      command: kubectl apply -f k8sdeployment.yaml
+
+    # Task 7: Apply Kubernetes service
+    - name: Apply Kubernetes service
+      command: kubectl apply -f k8sservice.yaml
