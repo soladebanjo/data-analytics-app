@@ -35,10 +35,10 @@ pipeline {
             }
         }
         stage('Deploy to Minikube') {
-    	    steps {
-        	sh 'kubectl apply -f k8sdeployment.yaml'
-   		 }
-             }
+            steps {
+                // Deploy using kubectl
+                sh 'kubectl apply -f k8sdeployment.yaml'
+            }
         }
     }
 }
