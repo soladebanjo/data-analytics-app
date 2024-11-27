@@ -5,6 +5,11 @@
 </head>
 <body>
     <h1>Data Analytics Results</h1>
-    <p>Mean Value: {{ results.mean }}</p>
+    {% if results.error %}
+        <p>Error: {{ results.error }}</p>
+    {% else %}
+        <p>Mean Value: {{ results.mean }}</p>
+    {% endif %}
 </body>
 </html>
+
